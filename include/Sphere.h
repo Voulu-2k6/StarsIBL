@@ -33,8 +33,8 @@ private:
 		double local_r = 0.0;               // radius at each y level of the sphere, also reset each level
 
 		// generate vertices
-		for(int i = -1; i <= m; i++){ // foreach level
-			if(i >= 0 && i < m){ 	  // if not on the poles
+		for(int i = -1; i <= m + 1; i++){ // foreach level
+			if(i >= 0 && i < m + 1){ 	  // if not on the poles
 				theta = 0.0f;
 				local_r = sqrt(radius*radius - local_y*local_y);
 				for(int j = 0; j < n + 4; j++){ // iterate around the current ring
@@ -49,11 +49,15 @@ private:
 		}
 
 		// generate indices (TODO)
+		for(unsigned int i = 0; i < vertices.size(); i++){
+			indices.push_back(i);
+		}
+		haltCheck("Sphere: GetVertexData");
 	}
 
 	void setUpMesh(){
 	 // generate the vertex array object (defines vertex attributes)
-		glGenBuffers(1, &VAO);
+		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
 
 	 // generate the vertex and element (index) array objects
@@ -63,6 +67,7 @@ private:
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 	 // populate vertex data given center and radius (extend to handle more detail)
+		haltCheck("Sphere: Pre GetVertex");
 		getVertexData();
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vec3)*vertices.size(), &vertices[0], GL_STATIC_DRAW);      // populate vertex buffer
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int)*indices.size(), &indices[0], GL_STATIC_DRAW); // index
@@ -79,7 +84,12 @@ private:
 public:
 	~Sphere(){ glDeleteBuffers(1, &VBO); glDeleteBuffers(1, &EBO); glDeleteBuffers(1, &VAO); delete this; }
 	Sphere(vec3 c, float r): center(c), radius(r) { setUpMesh(); }
-	void Draw();
+	void Draw(shared_ptr<Shader> shader){
+		shader->use();
+		glBindVertexArray(VAO);
+		glDrawElements(GL_POINTS, indices.size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
 };
 
 #endif

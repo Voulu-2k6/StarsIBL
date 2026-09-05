@@ -28,9 +28,20 @@ const char* MAIN_VSRC = "shaders/m_vertex.txt";
 const char* MAIN_FSRC = "shaders/m_fragment.txt";
 
 // utility functions
+bool haltCheck(const char* where){
+	GLenum e;
+	bool halt = false;
+	while((e = glGetError()) != GL_NO_ERROR){
+		if(!halt){cout << "Error checks - " << where << ": ";} // remove?
+		halt = true;
+		cout << e << " ";
+	}
+	if(halt){cout << endl;}
+	return halt;
+}
 
 // my classes
-#include "Sphere.h"
 #include "Shader.h"
+#include "Sphere.h"
 
 #endif

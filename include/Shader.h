@@ -58,6 +58,7 @@ public:
 		int vertex = load_shader_from_source(v_source, GL_VERTEX_SHADER);
 		int geometry = do_geo ? load_shader_from_source(g_source, GL_GEOMETRY_SHADER) : -1;
 		int fragment = load_shader_from_source(f_source, GL_FRAGMENT_SHADER);
+		if(haltCheck("shader: load")){ valid = false; }
 
 	 // error check
 		if(vertex < 0 || fragment < 0 || (do_geo && geometry < 0)){
@@ -65,12 +66,14 @@ public:
 			valid = false;
 			id = 0;
 
-			glDeleteShader(vertex);
-			glDeleteShader(geometry);
-			glDeleteShader(fragment);
+			glDeleteShader((unsigned int) vertex);
+			if(do_geo){ glDeleteShader((unsigned int) geometry); }
+			glDeleteShader((unsigned int) fragment);
 
 			return;
 		}
+		if(haltCheck("shader: error check")){ valid = false; }
+
 
 	 // create shader program
 		id = glCreateProgram();
@@ -78,14 +81,18 @@ public:
 		if(do_geo){ glAttachShader(id, (unsigned int) geometry); }
 		glAttachShader(id, (unsigned int) fragment);
 		glLinkProgram(id);
+		if(haltCheck("shader: link")){ valid = false; }
 
 	 // cleanup
-		glDeleteShader(vertex);
-		glDeleteShader(geometry);
-		glDeleteShader(fragment);
+		glDeleteShader((unsigned int) vertex);
+		if(do_geo){ glDeleteShader((unsigned int) geometry); }
+		glDeleteShader((unsigned int) fragment);
+		if(haltCheck("shader: delete")){ valid = false; }
+
 	}
 
 	bool is_valid(){ return valid; }
+	void use(){ glUseProgram(id); }
 };
 
 #endif

@@ -1,7 +1,7 @@
 #version 420 core
 
-out vec4 FragPos;
+out vec4 FragColor;
 
 void main(){
-	FragPos = vec4(1.0);
+	FragColor = vec4(1.0);
 }	
