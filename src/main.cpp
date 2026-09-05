@@ -9,7 +9,7 @@ void starsilb_handle_input(GLFWwindow* w);
  *     SCENE GLOBALS (QF0)								 										  *
  * ============================================================================================== */
 
-const int SCREEN_WIDTH = 2880;
+const int SCREEN_WIDTH = 1800;
 
 const int SCREEN_HEIGHT = 1800;
 
@@ -34,6 +34,7 @@ int main(int argc, char** argv){
 
  // openGL settings
 	glPointSize(20.0f);
+	glEnable(GL_CULL_FACE);
 
 /* ============================================================================================== *
  *     CREATING SHADER PROGRAMS (QF 1.1)								 						  *
@@ -47,7 +48,9 @@ int main(int argc, char** argv){
  *     CREATING SCENE OBJECTS (QF 1.2)								 						      *
  * ============================================================================================== */
 
-	auto sphere = (shared_ptr<Sphere>) make_shared<Sphere>(vec3(0.0, 0.0, -2.0), 0.8);
+	int res_theta = 10;
+	int res_phi = 10;
+	auto sphere = (shared_ptr<Sphere>) make_shared<Sphere>(vec3(0.0, 0.0, -2.0), 0.8, res_theta, res_phi);
 	if(haltCheck("sphere")){ cout << "Killing program" << endl; glfwTerminate(); return 1; }
 
 /* ============================================================================================== *
