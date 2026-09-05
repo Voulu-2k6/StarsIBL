@@ -1,10 +1,6 @@
 // Main file for rendering the scene.
 
-#include <iostream>
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
-using namespace std;
+#include "StarsIBL_include.h"
 
 // function prototypes
 void starsilb_handle_input(GLFWwindow* w);
@@ -14,12 +10,13 @@ void starsilb_handle_input(GLFWwindow* w);
  * ============================================================================================== */
 
 const int SCREEN_WIDTH = 2880;
+
 const int SCREEN_HEIGHT = 1800;
 
 /* ============================================================================================== *
  *     MAIN FUNCTION (QF1)								 										  *
  * ============================================================================================== */
-int main(){
+int main(int argc, char** argv){
  // Define the GLFW context window
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -35,6 +32,13 @@ int main(){
 	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){ cout << "StarsIBL: Glad failed to load" << endl; return -1; }
 
 /* ============================================================================================== *
+ *     CREATING SHADER PROGRAMS (QF 1.1)								 										  *
+ * ============================================================================================== */
+
+	auto main_program = (shared_ptr<Shader>) make_shared<Shader>(MAIN_VSRC, nullptr, MAIN_FSRC);
+	if(!main_program->is_valid()){ cout << "StarsIBL: main: main_shader program failed." << endl; glfwTerminate(); return 0; }
+
+/* ============================================================================================== *
  *     RENDERING LOOP (QF2)								 										  *
  * ============================================================================================== */
 	while(!glfwWindowShouldClose(win)){
@@ -48,7 +52,7 @@ int main(){
 		glfwPollEvents();     // checking for system inputs
 	}
 
-	cout << "Test, hello" << endl;
+	cout << "Test, hello " << ((argc > 1) ? argv[1] : "0") << endl;
 
 	return 0;
 }
