@@ -1,0 +1,7 @@
+Debug
+Includes/C:*
+Binaries
+*.o
+.settings
+.project
+.cproject
