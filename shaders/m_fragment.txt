@@ -1,9 +1,12 @@
 #version 420 core
 
 out vec4 FragColor;
+in vec3 ws;
 
-in vec3 c;
+uniform vec3 center;
 
 void main(){
+	vec3 norm = ws - center;
+	vec3 c = (ws + vec3(1.0))*0.5;
 	FragColor = vec4(c, 1.0);
 }	
