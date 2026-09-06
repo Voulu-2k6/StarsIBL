@@ -16,9 +16,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+// image loader
+#include "ftms.h"
+
 // namespace declarations
 using namespace std;
-using glm::vec3;
+using namespace glm;
 
 // common constants
 double PI = 3.141592653589793238462643383279502884;
@@ -32,7 +35,7 @@ bool haltCheck(const char* where){
 	GLenum e;
 	bool halt = false;
 	while((e = glGetError()) != GL_NO_ERROR){
-		if(!halt){cout << "Error checks - " << where << ": ";} // remove?
+		cout << "Error checks - " << where << ": ";
 		halt = true;
 		cout << e << " ";
 	}

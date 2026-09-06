@@ -7,6 +7,7 @@ class Shader {
 private:
 	unsigned int id;
 	bool valid = true;
+	int get_loc(const char* name){ return glGetUniformLocation(id, name); }
 	int load_shader_from_source(const char* source, GLenum type){
 
 	 // stream utilities
@@ -49,6 +50,7 @@ private:
 
 	    return (int) shader;
 	}
+
 public:
 	~Shader(){ glDeleteProgram(id); }
 	Shader(const char* v_source, const char* g_source, const char* f_source){
@@ -93,6 +95,11 @@ public:
 
 	bool is_valid(){ return valid; }
 	void use(){ glUseProgram(id); }
+	void set_i(const char* name, int val){ glUniform1i(get_loc(name), val); }
+	void set_f(const char* name, float val){ glUniform1f(get_loc(name), val); }
+	void set_3f(const char* name, vec3 val){ glUniform3f(get_loc(name), val.x, val.y, val.z); }
+	void set_4m(const char* name, mat4 val){ glUniformMatrix4fv(get_loc(name), 1, GL_FALSE, value_ptr(val)); }
+
 };
 
 #endif

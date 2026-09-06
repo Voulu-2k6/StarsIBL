@@ -9,7 +9,6 @@ private:
 	unsigned int VBO;
 	unsigned int EBO;
 
-	vec3 center;
 	double radius;
 
 	vector<vec3> vertices;
@@ -33,7 +32,7 @@ private:
 		double local_y = radius; 			// begin at the peak of the sphere and iterate down (local_y = radius*sin(phi))
 		double local_r = 0.0;               // radius at each y level of the sphere, also reset each level
 
-		// generate vertices
+		// generate vertices in model space
 		for(int i = -1; i <= n + 1; i++){   // foreach level
 			if(i >= 0 && i < n + 1){ 	         // if not on the poles
 				theta = 0.0f;
@@ -50,8 +49,7 @@ private:
 			local_y = radius*sin(phi); 		// drop to the next level
 		}
 
-		// generate indices (TODO)
-
+		// generate indices
 		// circles iterate towards positive x from positive z, ensure proper winding
 		// we should end up with some
 		int count = 1; // begin just under the cap vertex
@@ -79,7 +77,6 @@ private:
 			indices.push_back(bottom);
 			indices.push_back(count + (i + 1) % layer_size);
 		}
-
 
 		haltCheck("Sphere: GetVertexData");
 	}
@@ -112,7 +109,7 @@ private:
 	}
 public:
 	~Sphere(){ glDeleteBuffers(1, &VBO); glDeleteBuffers(1, &EBO); glDeleteBuffers(1, &VAO); delete this; }
-	Sphere(vec3 c, float r, int m, int n): center(c), radius(r) { setUpMesh(m, n); }
+	Sphere(float r, int m, int n): radius(r) { setUpMesh(m, n); }
 	void Draw(shared_ptr<Shader> shader){
 		shader->use();
 		glBindVertexArray(VAO);
